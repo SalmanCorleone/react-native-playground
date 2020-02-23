@@ -4,7 +4,7 @@ import DoneList from '../screens/DoneList';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {Icon} from 'react-native-elements';
-import Theme from './Theme';
+import Theme from './theme';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,12 +31,11 @@ const AppWithNavigation = () => (
       },
     })}
     tabBarOptions={{
-      activeTintColor: Theme.blue,
-      inactiveTintColor: Theme.gray,
+      activeTintColor: Theme.three,
+      inactiveTintColor: Theme.one,
+      showLabel: false,
       style: {
         height: 60,
-        paddingTop: 5,
-        borderTopWidth: 0,
       },
     }}>
     <Tab.Screen name="Tasks" component={TaskList} />

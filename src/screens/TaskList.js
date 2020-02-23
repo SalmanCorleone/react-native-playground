@@ -8,8 +8,9 @@ import {
   UIManager,
 } from 'react-native';
 import utils from '../utils';
-import {Input, Icon} from 'react-native-elements';
+import {Input, Icon, ThemeContext} from 'react-native-elements';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import Theme from '../config/theme';
 
 function TaskList() {
   const [isLaoding, setLoading] = useState(false);
@@ -35,29 +36,34 @@ function TaskList() {
 
   return (
     <SafeAreaView style={styles.bg}>
+      <StatusBar backgroundColor={Theme.one} />
       {/* Create Task */}
-      <Input
-        value={text}
-        inputStyle={styles.inputText}
-        placeholder="Create a new Task"
-        onChangeText={str => setText(str)}
-        onSubmitEditing={({nativeEvent}) => addTask(nativeEvent.text)}
-        leftIcon={
-          <Icon
-            onPress={() => addTask(text)}
-            name="plus"
-            type="simple-line-icon"
-            size={15}
-            color="black"
-          />
-        }
-      />
+      <View style={styles.inputBox}>
+        <Input
+          value={text}
+          inputStyle={styles.inputText}
+          placeholder="Create a new Task"
+          onChangeText={str => setText(str)}
+          onSubmitEditing={({nativeEvent}) => addTask(nativeEvent.text)}
+          leftIcon={
+            <Icon
+              onPress={() => addTask(text)}
+              name="plus"
+              type="simple-line-icon"
+              size={15}
+              color="black"
+            />
+          }
+        />
+      </View>
 
       {/* Task List */}
-      <Text>{isLaoding ? 'true' : 'false'}</Text>
-      {tasks.map((task, i) => (
-        <Text key={i}>{task.name}</Text>
-      ))}
+      <View style={styles.listBox}>
+        <Text>{isLaoding ? 'true' : 'false'}</Text>
+        {tasks.map((task, i) => (
+          <Text key={i}>{task.name}</Text>
+        ))}
+      </View>
     </SafeAreaView>
   );
 }
@@ -66,10 +72,17 @@ const styles = StyleSheet.create({
   bg: {
     flex: 1,
   },
+  inputBox: {
+    paddingVertical: 30,
+    backgroundColor: Theme.one,
+  },
   inputText: {
     fontFamily: 'SairaSemiCondensed-Regular',
     fontSize: 15,
     marginLeft: 10,
+  },
+  listBox: {
+    backgroundColor: Theme.two,
   },
 });
 

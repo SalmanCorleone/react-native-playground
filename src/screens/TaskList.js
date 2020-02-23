@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,37 +7,41 @@ import {
   LayoutAnimation,
   UIManager,
 } from 'react-native';
-import {storeData, getData} from '../utils';
+import utils from '../utils';
 import {Input, Icon} from 'react-native-elements';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 function TaskList() {
-  const [text, setText] = useState('');
-  const [tasks, setTasks] = useState([
-    {
-      name: 'Frst',
-      date: new Date(),
-    },
-  ]);
   const [isLaoding, setLoading] = useState(false);
+  const [text, setText] = useState('');
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    async function readFromStorage() {
+      setLoading(true);
+      let taskList = await utils.getData('taskList');
+      setTasks(taskList);
+      setLoading(false);
+    }
+    readFromStorage();
+  }, []);
 
   const addTask = task => {
-    setTasks([
-      ...tasks,
-      {
-        name: task,
-        date: new Date(),
-      },
-    ]);
+    let updatedTasks = [...tasks, {name: task, date: new Date()}];
+    utils.storeData('taskList', updatedTasks);
+    setTasks(updatedTasks);
     setText('');
   };
 
   return (
-    <View style={styles.bg}>
+    <SafeAreaView style={styles.bg}>
       {/* Create Task */}
       <Input
         value={text}
+        inputStyle={styles.inputText}
         placeholder="Create a new Task"
         onChangeText={str => setText(str)}
+        onSubmitEditing={({nativeEvent}) => addTask(nativeEvent.text)}
         leftIcon={
           <Icon
             onPress={() => addTask(text)}
@@ -47,15 +51,14 @@ function TaskList() {
             color="black"
           />
         }
-        inputStyle={styles.inputText}
       />
 
       {/* Task List */}
-      <Text>{text}</Text>
+      <Text>{isLaoding ? 'true' : 'false'}</Text>
       {tasks.map((task, i) => (
-        <Text>{task.name}</Text>
+        <Text key={i}>{task.name}</Text>
       ))}
-    </View>
+    </SafeAreaView>
   );
 }
 

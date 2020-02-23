@@ -15,7 +15,7 @@ const AppWithNavigation = () => (
         let iconName;
 
         if (route.name === 'Tasks') {
-          iconName = 'paper-plane';
+          iconName = 'layers';
         } else if (route.name === 'Completed') {
           iconName = 'check';
         }
@@ -36,6 +36,7 @@ const AppWithNavigation = () => (
       style: {
         height: 60,
         paddingTop: 5,
+        borderTopWidth: 0,
       },
     }}>
     <Tab.Screen name="Tasks" component={TaskList} />

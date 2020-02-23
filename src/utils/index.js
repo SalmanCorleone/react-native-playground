@@ -13,11 +13,19 @@ let getData = async key => {
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
-      return value;
+      return JSON.parse(value);
     }
   } catch (e) {
     ToastAndroid.show('Failed to read task', ToastAndroid.SHORT);
   }
 };
 
-export default {storeData, getData};
+let removeData = async key => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (e) {
+    ToastAndroid.show('Failed to remove task', ToastAndroid.SHORT);
+  }
+};
+
+export default {storeData, getData, removeData};

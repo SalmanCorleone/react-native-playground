@@ -5,4 +5,5 @@ export default {
   three: '#F0B7A4',
   four: '#F1D1B5',
   five: '#FFEBCF',
+  dark: '#142850'
 };

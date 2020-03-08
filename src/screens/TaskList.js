@@ -6,14 +6,18 @@ import {
   StatusBar,
   LayoutAnimation,
   UIManager,
+  ScrollView,
+  SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import utils from '../utils';
-import {Input, Icon, ThemeContext} from 'react-native-elements';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import Theme from '../config/theme';
+import {Input, Icon, Button} from 'react-native-elements';
+import theme from '../config/theme';
+import Tab from '../components/tab';
+import SwipeCard from '../components/swipeCard';
 
 function TaskList() {
-  const [isLaoding, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [text, setText] = useState('');
   const [tasks, setTasks] = useState([]);
 
@@ -27,44 +31,66 @@ function TaskList() {
     readFromStorage();
   }, []);
 
-  const addTask = task => {
-    let updatedTasks = [...tasks, {name: task, date: new Date()}];
-    utils.storeData('taskList', updatedTasks);
+  const addTask = taskName => {
+    let updatedTasks = [...tasks, {name: taskName, date: new Date()}];
     setTasks(updatedTasks);
+    utils.storeData('taskList', updatedTasks);
     setText('');
   };
 
-  return (
-    <SafeAreaView style={styles.bg}>
-      <StatusBar backgroundColor={Theme.one} />
-      {/* Create Task */}
-      <View style={styles.inputBox}>
-        <Input
-          value={text}
-          inputStyle={styles.inputText}
-          placeholder="Create a new Task"
-          onChangeText={str => setText(str)}
-          onSubmitEditing={({nativeEvent}) => addTask(nativeEvent.text)}
-          leftIcon={
-            <Icon
-              onPress={() => addTask(text)}
-              name="plus"
-              type="simple-line-icon"
-              size={15}
-              color="black"
-            />
-          }
-        />
-      </View>
+  const reset = () => {
+    setLoading(true);
+    setTasks([]);
+    utils.storeData('taskList', []);
+    setLoading(false);
+  };
 
-      {/* Task List */}
-      <View style={styles.listBox}>
-        <Text>{isLaoding ? 'true' : 'false'}</Text>
-        {tasks.map((task, i) => (
-          <Text key={i}>{task.name}</Text>
-        ))}
+  if (isLoading) {
+    return <ActivityIndicator color={theme.two} size={100} style={{flex: 1}} />;
+  }
+
+  return (
+    <View style={styles.bg}>
+      <StatusBar backgroundColor={theme.three} />
+      {/* Container */}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Test Control */}
+        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+          <Button title="Reset" onPress={reset} />
+        </View>
+        {/* Create Task */}
+        <View style={styles.inputBox}>
+          <Input
+            value={text}
+            inputStyle={styles.inputText}
+            placeholder="Create a new Task"
+            onChangeText={str => setText(str)}
+            onSubmitEditing={({nativeEvent}) => addTask(nativeEvent.text)}
+            leftIcon={
+              <Icon
+                onPress={() => addTask(text)}
+                name="plus"
+                type="simple-line-icon"
+                size={15}
+                color="black"
+              />
+            }
+          />
+        </View>
+
+        {/* Task List */}
+        <View style={styles.listBox}>
+          {tasks.map((task, i) => (
+            <SwipeCard task={task} key={i} />
+          ))}
+        </View>
+      </ScrollView>
+
+      {/* Navigation */}
+      <View>
+        <Tab />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -72,9 +98,12 @@ const styles = StyleSheet.create({
   bg: {
     flex: 1,
   },
+  container: {
+    flex: 1,
+  },
   inputBox: {
     paddingVertical: 30,
-    backgroundColor: Theme.one,
+    backgroundColor: theme.two,
   },
   inputText: {
     fontFamily: 'SairaSemiCondensed-Regular',
@@ -82,7 +111,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   listBox: {
-    backgroundColor: Theme.two,
+    padding: 10,
   },
 });
 

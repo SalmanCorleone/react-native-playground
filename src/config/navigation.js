@@ -2,45 +2,22 @@ import React from 'react';
 import TaskList from '../screens/TaskList';
 import DoneList from '../screens/DoneList';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {Icon} from 'react-native-elements';
 import Theme from './theme';
 
-const Tab = createBottomTabNavigator();
+// const Tab = createBottomTabNavigator();
+const Main = createStackNavigator();
 
 const AppWithNavigation = () => (
-  <Tab.Navigator
-    screenOptions={({route}) => ({
-      tabBarIcon: ({focused, color, size}) => {
-        let iconName;
-
-        if (route.name === 'Tasks') {
-          iconName = 'layers';
-        } else if (route.name === 'Completed') {
-          iconName = 'check';
-        }
-
-        return (
-          <Icon
-            type="simple-line-icon"
-            name={iconName}
-            size={size}
-            color={color}
-          />
-        );
-      },
-    })}
-    tabBarOptions={{
-      activeTintColor: Theme.three,
-      inactiveTintColor: Theme.one,
-      showLabel: false,
-      style: {
-        height: 60,
-      },
+  <Main.Navigator
+    screenOptions={{
+      headerShown: false,
     }}>
-    <Tab.Screen name="Tasks" component={TaskList} />
-    <Tab.Screen name="Completed" component={DoneList} />
-  </Tab.Navigator>
+    <Main.Screen name="Tasks" component={TaskList} />
+    <Main.Screen name="Completed" component={DoneList} />
+  </Main.Navigator>
 );
 
 const App = () => (

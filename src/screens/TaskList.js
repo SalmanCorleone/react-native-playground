@@ -9,6 +9,9 @@ import {
   ScrollView,
   SafeAreaView,
   ActivityIndicator,
+  Modal,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import utils from '../utils';
 import {Input, Icon, Button} from 'react-native-elements';
@@ -20,6 +23,7 @@ function TaskList() {
   const [isLoading, setLoading] = useState(false);
   const [text, setText] = useState('');
   const [tasks, setTasks] = useState([]);
+  const [showModal, setModal] = useState(false);
 
   useEffect(() => {
     async function readFromStorage() {
@@ -45,52 +49,70 @@ function TaskList() {
     setLoading(false);
   };
 
+  const toggleModal = () => setModal(!showModal);
+
   if (isLoading) {
-    return <ActivityIndicator color={theme.two} size={100} style={{flex: 1}} />;
+    return <ActivityIndicator color={theme.two} size={100} style={styles.bg} />;
   }
 
   return (
-    <View style={styles.bg}>
-      <StatusBar backgroundColor={theme.three} />
-      {/* Container */}
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Test Control */}
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-          <Button title="Reset" onPress={reset} />
-        </View>
-        {/* Create Task */}
-        <View style={styles.inputBox}>
-          <Input
-            value={text}
-            inputStyle={styles.inputText}
-            placeholder="Create a new Task"
-            onChangeText={str => setText(str)}
-            onSubmitEditing={({nativeEvent}) => addTask(nativeEvent.text)}
-            leftIcon={
-              <Icon
-                onPress={() => addTask(text)}
-                name="plus"
-                type="simple-line-icon"
-                size={15}
-                color="black"
-              />
-            }
-          />
+    <>
+      <View style={styles.bg}>
+        <StatusBar backgroundColor={theme.three} />
+
+        {/* Create Task Modal */}
+        <View>
+          <Modal visible={showModal}>
+            <View style={{margin: 22}}>
+              <View>
+                <Text>Hello World!</Text>
+                <TouchableOpacity onPress={toggleModal}>
+                  <Text>Hide Modal</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
 
-        {/* Task List */}
-        <View style={styles.listBox}>
-          {tasks.map((task, i) => (
-            <SwipeCard task={task} key={i} />
-          ))}
-        </View>
-      </ScrollView>
+        {/* Container */}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Test Control */}
+          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <Button title="Reset" onPress={reset} />
+          </View>
+          {/* Create Task */}
+          <View style={styles.inputBox}>
+            <Input
+              value={text}
+              inputStyle={styles.inputText}
+              placeholder="Create a new Task"
+              onChangeText={str => setText(str)}
+              onSubmitEditing={({nativeEvent}) => addTask(nativeEvent.text)}
+              leftIcon={
+                <Icon
+                  onPress={() => addTask(text)}
+                  name="plus"
+                  type="simple-line-icon"
+                  size={15}
+                  color="black"
+                />
+              }
+            />
+          </View>
 
+          {/* Task List */}
+          <View style={styles.listBox}>
+            {tasks.map((task, i) => (
+              <SwipeCard task={task} key={i} />
+            ))}
+          </View>
+        </ScrollView>
+      </View>
       {/* Navigation */}
       <View>
         <Tab />
       </View>
-    </View>
+    </>
   );
 }
 
@@ -103,7 +125,6 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     paddingVertical: 30,
-    backgroundColor: theme.two,
   },
   inputText: {
     fontFamily: 'SairaSemiCondensed-Regular',
@@ -208,41 +229,3 @@ export default TaskList;
 // 			</View>
 // 		);
 // 	};
-
-// 	renderItem = (item, i) => {
-// 		return <Item key={item.id} item={item} id={i} onDone={this.onDone} onRemove={this.onRemove} />;
-// 	};
-
-// 	onRemove = (item) => {
-// 		const { dispatch } = this.props;
-// 		dispatch(actionCreators.remove(item));
-// 		LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-// 		ToastAndroid.show('Task Deleted!', ToastAndroid.SHORT);
-// 	};
-// 	onDone = (item) => {
-// 		const { dispatch } = this.props;
-// 		dispatch(actionCreators.done(item));
-// 		LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-// 		ToastAndroid.show('Task Completed!', ToastAndroid.SHORT);
-// 	};
-
-// 	render() {
-// 		const { tasks } = this.props;
-// 		var groupedByDate = groupData(tasks);
-
-// 		/********RENDER*********/
-
-// 		if (tasks === undefined || tasks.length == 0) {
-// 			return null;
-// 		} else {
-// 			return (
-// 				<ScrollView>
-// 					{/* <Text style={{ color: 'whitesmoke' }}>{JSON.stringify(groupedByDate)}</Text> */}
-// 					{Object.entries(groupedByDate).map(this.hey)}
-// 				</ScrollView>
-// 			);
-// 		}
-// 	}
-// }
-
-// export default connect()(List);

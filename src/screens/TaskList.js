@@ -9,7 +9,6 @@ import {
   ScrollView,
   SafeAreaView,
   ActivityIndicator,
-  Modal,
   Alert,
   TouchableOpacity,
 } from 'react-native';
@@ -17,13 +16,17 @@ import utils from '../utils';
 import {Input, Icon, Button} from 'react-native-elements';
 import theme from '../config/theme';
 import Tab from '../components/tab';
+import CustomModal from '../components/modal';
 import SwipeCard from '../components/swipeCard';
+import {useNavigation} from '@react-navigation/native';
 
 function TaskList() {
   const [isLoading, setLoading] = useState(false);
   const [text, setText] = useState('');
   const [tasks, setTasks] = useState([]);
   const [showModal, setModal] = useState(false);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     async function readFromStorage() {
@@ -36,6 +39,9 @@ function TaskList() {
   }, []);
 
   const addTask = taskName => {
+    if (!taskName) {
+      return;
+    }
     let updatedTasks = [...tasks, {name: taskName, date: new Date()}];
     setTasks(updatedTasks);
     utils.storeData('taskList', updatedTasks);
@@ -58,28 +64,18 @@ function TaskList() {
   return (
     <>
       <View style={styles.bg}>
-        <StatusBar backgroundColor={theme.three} />
+        <StatusBar backgroundColor={theme.blueGreen} />
 
         {/* Create Task Modal */}
-        <View>
-          <Modal visible={showModal}>
-            <View style={{margin: 22}}>
-              <View>
-                <Text>Hello World!</Text>
-                <TouchableOpacity onPress={toggleModal}>
-                  <Text>Hide Modal</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+        <CustomModal visible={showModal} toggle={toggleModal} />
+
+        {/* Test Control */}
+        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+          <Button title="Reset" onPress={reset} />
         </View>
 
         {/* Container */}
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Test Control */}
-          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Button title="Reset" onPress={reset} />
-          </View>
           {/* Create Task */}
           <View style={styles.inputBox}>
             <Input
@@ -107,10 +103,11 @@ function TaskList() {
             ))}
           </View>
         </ScrollView>
-      </View>
-      {/* Navigation */}
-      <View>
-        <Tab />
+
+        {/* Navigation */}
+        <View>
+          <Tab toggleModal={toggleModal} nav={navigation} />
+        </View>
       </View>
     </>
   );

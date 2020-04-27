@@ -1,21 +1,28 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import theme from '../config/theme';
 import {Icon} from 'react-native-elements';
 
-function Tab({toggleModal}) {
+function Tab({toggleModal, nav}) {
   return (
     <>
       <View style={styles.bg}>
-        <TouchableOpacity style={styles.section}>
+        <TouchableOpacity
+          style={styles.section}
+          onPress={() => nav.push('Tasks')}>
           <Icon name="bars" type="antdesign" color={theme.blueGreen} />
         </TouchableOpacity>
+
         <View style={styles.section} />
-        <TouchableOpacity style={styles.section}>
+
+        <TouchableOpacity
+          style={styles.section}
+          onPress={() => nav.push('Completed')}>
           <Icon name="check" type="foundation" color={theme.blueGreen} />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.createIcon}>
+
+      <TouchableOpacity style={styles.createIcon} onPress={toggleModal}>
         <Icon name="plus" type="antdesign" size={40} color={theme.blue} />
       </TouchableOpacity>
     </>

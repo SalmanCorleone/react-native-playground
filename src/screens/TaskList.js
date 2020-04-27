@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -13,12 +13,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import utils from '../utils';
-import {Input, Icon, Button} from 'react-native-elements';
-import theme from '../config/theme';
-import Tab from '../components/tab';
-import CustomModal from '../components/modal';
-import SwipeCard from '../components/swipeCard';
-import {useNavigation} from '@react-navigation/native';
+import { Input, Icon, Button } from 'react-native-elements';
+import theme from '../config/Theme';
+import Tab from '../components/Tab';
+import CustomModal from '../components/Modal';
+import SwipeCard from '../components/SwipeCard';
+import { useNavigation } from '@react-navigation/native';
 
 function TaskList() {
   const [isLoading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ function TaskList() {
     if (!taskName) {
       return;
     }
-    let updatedTasks = [...tasks, {name: taskName, date: new Date()}];
+    let updatedTasks = [...tasks, { name: taskName, date: new Date() }];
     setTasks(updatedTasks);
     utils.storeData('taskList', updatedTasks);
     setText('');
@@ -70,7 +70,7 @@ function TaskList() {
         <CustomModal visible={showModal} toggle={toggleModal} />
 
         {/* Test Control */}
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
           <Button title="Reset" onPress={reset} />
         </View>
 
@@ -83,7 +83,7 @@ function TaskList() {
               inputStyle={styles.inputText}
               placeholder="Create a new Task"
               onChangeText={str => setText(str)}
-              onSubmitEditing={({nativeEvent}) => addTask(nativeEvent.text)}
+              onSubmitEditing={({ nativeEvent }) => addTask(nativeEvent.text)}
               leftIcon={
                 <Icon
                   onPress={() => addTask(text)}
@@ -98,9 +98,7 @@ function TaskList() {
 
           {/* Task List */}
           <View style={styles.listBox}>
-            {tasks.map((task, i) => (
-              <SwipeCard task={task} key={i} />
-            ))}
+            {tasks && tasks.map((task, i) => <SwipeCard task={task} key={i} />)}
           </View>
         </ScrollView>
 

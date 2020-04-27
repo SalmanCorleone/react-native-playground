@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import theme from '../config/theme';
+import { View, Text, StyleSheet } from 'react-native';
+import theme from '../config/Theme';
 
-const SwipeCard = ({task}) => {
+const SwipeCard = ({ task }) => {
   return (
     <View style={styles.card}>
       <Text style={styles.txt}>{task.name}</Text>

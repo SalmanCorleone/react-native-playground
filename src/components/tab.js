@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import theme from '../config/theme';
-import {Icon} from 'react-native-elements';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import theme from '../config/Theme';
+import { Icon } from 'react-native-elements';
 
-function Tab({toggleModal, nav}) {
+function Tab({ toggleModal, nav }) {
   return (
     <>
       <View style={styles.bg}>

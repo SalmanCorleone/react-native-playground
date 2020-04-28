@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import theme from '../config/Theme';
 import { Icon } from 'react-native-elements';
-import Animated, { Easing } from 'react-native-reanimated';
+import Animated, { Easing, useCode, not } from 'react-native-reanimated';
 import { TapGestureHandler, State } from 'react-native-gesture-handler';
-import { mix, onGestureEvent, withTransition } from 'react-native-redash';
+import {
+  mix,
+  onGestureEvent,
+  withTransition,
+  useTransition,
+} from 'react-native-redash';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -12,7 +17,7 @@ const {
   Value,
   eq,
   cond,
-  useCode,
+  interpolate,
   block,
   clockRunning,
   Clock,
@@ -21,7 +26,6 @@ const {
   timing,
   debug,
   stopClock,
-  event,
 } = Animated;
 
 function runTiming(clock, value, dest) {
@@ -67,16 +71,27 @@ function runTiming(clock, value, dest) {
 function Tab({ toggleModal, nav }) {
   const state = new Value(State.UNDETERMINED);
   const gestureHandler = onGestureEvent({ state });
+  // const clock = new Clock();
   const progress = new Value(0);
-  const clock = new Clock();
+  const transition = useTransition(progress, { duration: 200 });
+  // progress = cond(eq(state, State.END), runTiming(clock, 0, 1));
 
-  let tranlateY = cond(eq(state, State.END), runTiming(clock, 0, -WIDTH / 2));
+  useCode(() => cond(eq(state, State.END), set(progress, not(progress))));
 
-  // useCode(() =>
-  //   block([
-  //     cond(eq(state, State.BEGAN), (tranlateY = runTiming(clock, 0, -120))),
-  //   ]),
-  // );
+  let translateY = interpolate(transition, {
+    inputRange: [0, 1],
+    outputRange: [0, -WIDTH / 2],
+  });
+
+  let opacity = interpolate(transition, {
+    inputRange: [0, 1],
+    outputRange: [1, 0.2],
+  });
+
+  let scale = interpolate(transition, {
+    inputRange: [0, 1],
+    outputRange: [1, 2],
+  });
 
   return (
     <>
@@ -100,7 +115,7 @@ function Tab({ toggleModal, nav }) {
         <Animated.View
           style={[
             styles.createIcon,
-            { transform: [{ translateY: tranlateY }] },
+            { opacity, transform: [{ translateY }, { scale }] },
           ]}
           onPress={toggleModal}>
           <Icon name="plus" type="antdesign" size={40} color={theme.blue} />

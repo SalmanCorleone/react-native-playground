@@ -1,5 +1,11 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Text,
+} from 'react-native';
 import theme from '../config/Theme';
 import { Icon } from 'react-native-elements';
 import Animated, { Easing, useCode, not } from 'react-native-reanimated';
@@ -9,9 +15,12 @@ import {
   onGestureEvent,
   withTransition,
   useTransition,
+  withSpringTransition,
 } from 'react-native-redash';
+import Block from './Block';
 
 const WIDTH = Dimensions.get('window').width;
+const ICON_SIZE = 80;
 
 const {
   Value,
@@ -28,69 +37,20 @@ const {
   stopClock,
 } = Animated;
 
-function runTiming(clock, value, dest) {
-  const state = {
-    finished: new Value(0),
-    position: new Value(0),
-    time: new Value(0),
-    frameTime: new Value(0),
-  };
-
-  const config = {
-    duration: 200,
-    toValue: new Value(0),
-    easing: Easing.inOut(Easing.ease),
-  };
-
-  return block([
-    cond(
-      clockRunning(clock),
-      [
-        // if the clock is already running we update the toValue, in case a new dest has been passed in
-        set(config.toValue, dest),
-      ],
-      [
-        // if the clock isn't running we reset all the animation params and start the clock
-        set(state.finished, 0),
-        set(state.time, 0),
-        set(state.position, value),
-        set(state.frameTime, 0),
-        set(config.toValue, dest),
-        startClock(clock),
-      ],
-    ),
-    // we run the step here that is going to update position
-    timing(clock, state, config),
-    // if the animation is over we stop the clock
-    cond(state.finished, debug('stop clock', stopClock(clock))),
-    // we made the block return the updated position
-    state.position,
-  ]);
-}
-
-function Tab({ toggleModal, nav }) {
-  const state = new Value(State.UNDETERMINED);
-  const gestureHandler = onGestureEvent({ state });
-  // const clock = new Clock();
-  const progress = new Value(0);
-  const transition = useTransition(progress, { duration: 200 });
-  // progress = cond(eq(state, State.END), runTiming(clock, 0, 1));
-
-  useCode(() => cond(eq(state, State.END), set(progress, not(progress))));
-
+function Tab({ toggleModal, nav, gestureHandler, transition }) {
   let translateY = interpolate(transition, {
     inputRange: [0, 1],
-    outputRange: [0, -WIDTH / 2],
+    outputRange: [0, -WIDTH / 2 - 150 - 20 - ICON_SIZE * 0.7],
   });
 
-  let opacity = interpolate(transition, {
+  let rotation = interpolate(transition, {
     inputRange: [0, 1],
-    outputRange: [1, 0.2],
+    outputRange: [0, Math.PI / 4],
   });
 
   let scale = interpolate(transition, {
     inputRange: [0, 1],
-    outputRange: [1, 2],
+    outputRange: [1, 0.5],
   });
 
   return (
@@ -115,10 +75,12 @@ function Tab({ toggleModal, nav }) {
         <Animated.View
           style={[
             styles.createIcon,
-            { opacity, transform: [{ translateY }, { scale }] },
+            { transform: [{ translateY }, { scale }] },
           ]}
           onPress={toggleModal}>
-          <Icon name="plus" type="antdesign" size={40} color={theme.blue} />
+          <Animated.View style={{ transform: [{ rotate: rotation }] }}>
+            <Icon name="plus" type="antdesign" size={40} color={theme.blue} />
+          </Animated.View>
         </Animated.View>
       </TapGestureHandler>
     </>
@@ -142,14 +104,16 @@ const styles = StyleSheet.create({
   },
   createIcon: {
     position: 'absolute',
-    padding: 20,
+    width: ICON_SIZE,
+    height: 80,
     flex: 1,
     bottom: 10,
     zIndex: 999,
     alignSelf: 'center',
+    justifyContent: 'center',
     backgroundColor: 'white',
     elevation: 3,
-    borderRadius: 50,
+    borderRadius: 90,
   },
 });
 

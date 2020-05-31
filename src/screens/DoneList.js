@@ -21,17 +21,46 @@ import Animated, {
   eq,
   interpolate,
   call,
+  concat,
+  add,
 } from 'react-native-reanimated';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
-const { Value, View } = Animated;
+const { Value, View, createAnimatedComponent } = Animated;
+const AnimatedPath = createAnimatedComponent(Path);
 
 const DoneList = () => {
   const state = new Value(State.UNDETERMINED);
   const translationY = new Value(0);
   const gestureHandler = onGestureEvent({ state, translationY });
   const translateY = withOffset(translationY, state);
+  const range = [-HEIGHT / 2, 0, HEIGHT / 2];
+  let dy = interpolate(translateY, {
+    inputRange: range,
+    outputRange: range,
+  });
+  const path = concat(
+    'm 0 ',
+    add(HEIGHT / 2, dy),
+    ' C ',
+    WIDTH / 2,
+    ' ',
+    HEIGHT / 2,
+    ' ',
+    WIDTH / 2,
+    ' ',
+    HEIGHT / 2 + 100,
+    ' ',
+    WIDTH,
+    ' ',
+    HEIGHT / 2 + 50,
+    ' l 0 ',
+    -HEIGHT / 2 - 50,
+    ' l ',
+    -WIDTH,
+    ' 0 z',
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -47,22 +76,19 @@ const DoneList = () => {
               />
             </ClipPath>
           </Defs>
-          <Path
-            d={`m 0 ${HEIGHT / 2}, 
-                C ${WIDTH / 2} ${HEIGHT / 2}, 
-                ${WIDTH / 2} ${HEIGHT / 2 + 100}, 
-                ${WIDTH} ${HEIGHT / 2 + 50},
-                l 0 ${-HEIGHT / 2 - 50},l ${-WIDTH} 0 z`}
+          <AnimatedPath
+            d={path}
             stroke="red"
+            fill="lightblue"
             strokeWidth={5}
             id="noob"
           />
-          <Rect
+          {/* <Rect
             height={600}
             width={WIDTH}
             fill="lightblue"
             clipPath="url(#tv)"
-          />
+          /> */}
         </Svg>
       </Block>
 

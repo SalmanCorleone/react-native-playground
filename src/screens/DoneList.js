@@ -11,18 +11,16 @@ import Svg, {
   ClipPath,
   G,
   Rect,
+  Image,
 } from 'react-native-svg';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { onGestureEvent, withOffset } from 'react-native-redash';
+import Icon from 'react-native-vector-icons/dist/Feather';
 import Animated, {
-  useCode,
-  cond,
-  set,
-  eq,
   interpolate,
-  call,
   concat,
   add,
+  Extrapolate,
 } from 'react-native-reanimated';
 
 const WIDTH = Dimensions.get('window').width;
@@ -35,7 +33,7 @@ const DoneList = () => {
   const translationY = new Value(0);
   const gestureHandler = onGestureEvent({ state, translationY });
   const translateY = withOffset(translationY, state);
-  const range = [-HEIGHT / 2, 0, HEIGHT / 2];
+  const range = [-100, 0, 100];
   let dy = interpolate(translateY, {
     inputRange: range,
     outputRange: range,
@@ -54,7 +52,7 @@ const DoneList = () => {
     ' ',
     WIDTH,
     ' ',
-    HEIGHT / 2 + 50,
+    add(HEIGHT / 2 + 50, dy),
     ' l 0 ',
     -HEIGHT / 2 - 50,
     ' l ',
@@ -68,14 +66,17 @@ const DoneList = () => {
         <Svg width={WIDTH} height={HEIGHT}>
           <Defs>
             <ClipPath id="tv">
-              <Path
-                d={`m 0 ${HEIGHT / 2}, C ${WIDTH / 2} ${HEIGHT / 2}, 
-                ${WIDTH / 2} ${HEIGHT / 2 + 100}, 
-                ${WIDTH} ${HEIGHT / 2 + 50},
-                l 0 ${-HEIGHT / 2 - 50},l ${-WIDTH} 0 z`}
-              />
+              <AnimatedPath d={path} />
             </ClipPath>
           </Defs>
+          <Image
+            x="5%"
+            y="10%"
+            width={300}
+            height={300}
+            preserveAspectRatio="xMidYMid"
+            href={require('../../assets/images/red-twitter.png')}
+          />
           <AnimatedPath
             d={path}
             stroke="red"
@@ -83,12 +84,16 @@ const DoneList = () => {
             strokeWidth={5}
             id="noob"
           />
-          {/* <Rect
-            height={600}
-            width={WIDTH}
-            fill="lightblue"
+
+          <Image
             clipPath="url(#tv)"
-          /> */}
+            x="5%"
+            y="10%"
+            width={300}
+            height={300}
+            preserveAspectRatio="xMidYMid"
+            href={require('../../assets/images/blue-twitter.png')}
+          />
         </Svg>
       </Block>
 

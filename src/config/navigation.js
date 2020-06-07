@@ -11,8 +11,8 @@ const AppWithNavigation = () => (
     screenOptions={{
       headerShown: false,
     }}>
-    <Main.Screen name="Tasks" component={TaskList} />
     <Main.Screen name="Completed" component={DoneList} />
+    <Main.Screen name="Tasks" component={TaskList} />
   </Main.Navigator>
 );
 

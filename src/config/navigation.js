@@ -1,6 +1,7 @@
 import React from 'react';
 import TaskList from '../screens/TaskList';
-import DoneList from '../screens/DoneList';
+import Home from '../screens/Home';
+import LiquidMask from '../screens/LiquidMask';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -11,7 +12,8 @@ const AppWithNavigation = () => (
     screenOptions={{
       headerShown: false,
     }}>
-    <Main.Screen name="Completed" component={DoneList} />
+    <Main.Screen name="Home" component={Home} />
+    <Main.Screen name="LiquidMask" component={LiquidMask} />
     <Main.Screen name="Tasks" component={TaskList} />
   </Main.Navigator>
 );

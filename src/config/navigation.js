@@ -12,8 +12,8 @@ const AppWithNavigation = () => (
     screenOptions={{
       headerShown: false,
     }}>
-    <Main.Screen name="LiquidMask" component={LiquidMask} />
     <Main.Screen name="Home" component={Home} />
+    <Main.Screen name="LiquidMask" component={LiquidMask} />
     <Main.Screen name="Tasks" component={TaskList} />
   </Main.Navigator>
 );

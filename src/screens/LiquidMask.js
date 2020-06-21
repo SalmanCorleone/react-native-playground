@@ -1,17 +1,23 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { SafeAreaView, Dimensions } from 'react-native';
 import Block from '../components/Block';
 import Svg, { Path, Defs, ClipPath, Image } from 'react-native-svg';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { onGestureEvent, withOffset } from 'react-native-redash';
-import Icon from 'react-native-vector-icons/dist/Feather';
 import Animated, {
   interpolate,
   concat,
   add,
   Extrapolate,
   sub,
+  abs,
+  divide,
+  cond,
+  lessThan,
+  greaterThan,
 } from 'react-native-reanimated';
+import Theme from '../config/Theme';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -36,21 +42,22 @@ const DoneList = () => {
     outputRange: rangeX,
     extrapolate: Extrapolate.CLAMP,
   });
+
   const path = concat(
     'm 0 ',
-    add(add(HEIGHT / 2, dy), dx),
+    add(add(HEIGHT / 2 + 20, dy), dx),
     ' C ',
-    add(WIDTH / 2, dx),
+    add(WIDTH / 2, cond(lessThan(dx, 0), dx, 0)),
     ' ',
-    add(HEIGHT / 2, dy),
+    add(add(HEIGHT / 2, dy), dx),
     ' ',
-    add(WIDTH / 2, dx),
+    add(WIDTH / 2, cond(greaterThan(dx, 0), dx, 0)),
     ' ',
-    sub(add(HEIGHT / 2 + 100, dy), dx),
+    sub(add(HEIGHT / 2, dy), dx),
     ' ',
     WIDTH,
     ' ',
-    add(HEIGHT / 2 + 50, dy),
+    sub(add(HEIGHT / 2 + 20, dy), dx),
     ' L ',
     WIDTH,
     ' 0 ',
@@ -61,31 +68,27 @@ const DoneList = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Block flex={1} border={1}>
-        <Svg width={WIDTH} height={HEIGHT}>
+      <Block flex={1}>
+        <Svg width={WIDTH} height={HEIGHT} preserveAspectRatio="xMinYMin slice">
           <Defs>
             <ClipPath id="tv">
               <AnimatedPath d={path} />
             </ClipPath>
           </Defs>
           <Image
-            x="5%"
-            y="40%"
-            width={300}
-            height={300}
-            preserveAspectRatio="xMidYMid"
-            href={require('../../assets/images/red-twitter.png')}
+            width={WIDTH}
+            height={HEIGHT}
+            preserveAspectRatio="xMidYMid slice"
+            href={require('../../assets/images/bg_2.jpg')}
           />
-          <AnimatedPath d={path} fill="lightblue" strokeWidth={5} id="noob" />
+          <AnimatedPath d={path} strokeWidth={5} id="noob" />
 
           <Image
             clipPath="url(#tv)"
-            x="5%"
-            y="40%"
-            width={300}
-            height={300}
-            preserveAspectRatio="xMidYMid"
-            href={require('../../assets/images/blue-twitter.png')}
+            width={WIDTH}
+            height={HEIGHT}
+            preserveAspectRatio="xMidYMid slice"
+            href={require('../../assets/images/bg_1.jpg')}
           />
         </Svg>
       </Block>
@@ -97,12 +100,10 @@ const DoneList = () => {
             position: 'absolute',
             width: 50,
             height: 50,
-            borderWidth: 1,
-            backgroundColor: 'white',
             borderWidth: 5,
-            borderColor: 'lightgrey',
+            borderColor: 'white',
             borderRadius: 30,
-            top: HEIGHT / 2 + 65,
+            top: HEIGHT / 2 + 20,
             left: WIDTH / 2 - 25,
             transform: [{ translateY, translateX }],
           }}

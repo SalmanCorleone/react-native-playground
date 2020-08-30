@@ -57,14 +57,15 @@ const TouchableBlock = ({
   flexwrap,
   ratio,
   shadow,
-  minHeight,
-  opacity,
   onPress = () => {},
+  disabled,
+  opacity,
 }) => (
   <TouchableOpacity
     onPress={onPress}
+    disabled={disabled || null}
     style={{
-      // flex
+      // position
       flex: flex || null,
       flexWrap: flexwrap || null,
       aspectRatio: ratio || null,
@@ -86,7 +87,6 @@ const TouchableBlock = ({
       right: absRight || null,
       width: w100 ? '100%' : width || null,
       height: h100 ? '100%' : height || null,
-      minHeight: minHeight || null,
       backgroundColor: bg || '',
       overflow: overflow || null,
       opacity: opacity || null,

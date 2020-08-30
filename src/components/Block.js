@@ -2,6 +2,18 @@
 import React from 'react';
 import { View } from 'react-native';
 
+const shadowProps = {
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 1,
+  },
+  shadowOpacity: 0.22,
+  shadowRadius: 2.22,
+
+  elevation: 3,
+};
+
 const Block = ({
   absolute,
   children,
@@ -44,6 +56,10 @@ const Block = ({
   z,
   flexwrap,
   ratio,
+  shadow,
+  minHeight,
+  maxHeight,
+  opacity,
 }) => (
   <View
     style={{
@@ -69,8 +85,11 @@ const Block = ({
       right: absRight || null,
       width: w100 ? '100%' : width || null,
       height: h100 ? '100%' : height || null,
+      minHeight: minHeight || null,
+      maxHeight: maxHeight || null,
       backgroundColor: bg || '',
       overflow: overflow || null,
+      opacity: opacity || null,
       // Border
       borderWidth: border || null,
       borderRadius: br || null,
@@ -92,6 +111,7 @@ const Block = ({
       paddingBottom: pb || null,
       paddingHorizontal: ph || null,
       paddingVertical: pv || null,
+      ...(shadow ? shadowProps : null),
       ...style,
     }}>
     {children}

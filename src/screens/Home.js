@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, StatusBar } from 'react-native';
+import { StyleSheet, Text, ScrollView, StatusBar } from 'react-native';
 import TouchableBlock from '../components/TouchableBlock';
 import { useNavigation } from '@react-navigation/native';
 import Block from '../components/Block';
@@ -11,6 +11,7 @@ const Home = () => {
   const OPTIONS = [
     { name: 'Liquid Mask', func: () => nav.navigate('LiquidMask') },
     { name: 'Swipe List', func: () => nav.navigate('Tasks') },
+    { name: 'Tab Selector', func: () => nav.navigate('Team') },
   ];
 
   return (

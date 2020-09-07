@@ -75,13 +75,13 @@ const DoneList = () => {
               <AnimatedPath d={path} />
             </ClipPath>
           </Defs>
+
           <Image
             width={WIDTH}
             height={HEIGHT}
             preserveAspectRatio="xMidYMid slice"
             href={require('../../assets/images/bg_2.jpg')}
           />
-          <AnimatedPath d={path} strokeWidth={5} id="noob" />
 
           <Image
             clipPath="url(#tv)"
